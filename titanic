@@ -1,0 +1,56 @@
+> options(digits=3)
+> library(tidyverse)
+> install.packages("titanic")
+> library(titanic)
+
+> titanic <- titanic_train %>%
++     select(Survived, Pclass, Sex, Age, SibSp, Parch, Fare) %>%
++     mutate(Survived = factor(Survived), 
++            Pclass = factor(Pclass),
++            Sex = factor(Sex))
+
+> t.plot <- titanic %>%
++     filter(!is.na(Age)) %>%
++     ggplot(aes(x = Age, group = Sex, fill = Sex))
+> t.plot + geom_density(alpha = 0.2, bw = 10)
+
+> titanic %>%
++     filter(Sex %in% c("male", "female")) %>%
++     count(Sex)
+
+> titanic %>%
++     filter(Age == 40 & Sex %in% c("male", "female")) %>%
++     count(Sex)
+
+> params <- titanic %>%
++     filter(!is.na(Age)) %>%
++     summarize(mean = mean(Age), sd = sd(Age))
+> p <- titanic %>%
++     ggplot(aes(sample = Age)) +
++     geom_qq(dparams = params) +
++     geom_abline()
+
+> titanic %>%
++     ggplot(aes(x= Survived, fill = Sex)) + 
++     geom_bar(position = position_dodge())
+
+> p <- titanic %>%
++     ggplot(aes(x = Age, y = ..count.., fill = Survived))
+> p + geom_density(alpha = 0.2)
+
+> titanic %>%
++     filter(Fare > 0) %>%
++     ggplot(aes(Survived, Fare)) +
++     geom_boxplot(alpha = 0.2) +
++     scale_y_continuous(trans = "log2") +
++     geom_jitter()
+
+> t <- titanic %>%
++     ggplot(aes(x = Pclass, fill = Survived)) +
++     geom_bar()
+> t
+> t + geom_bar(position = position_fill())
+> titanic %>%
++     ggplot(aes(x = Survived, fill = Pclass)) +
++     geom_bar(position = position_fill())
+
